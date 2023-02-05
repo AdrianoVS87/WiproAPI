@@ -17,6 +17,9 @@ public class EnderecoFrete {
     private String estado;
     private Double frete;
 
+    public EnderecoFrete() {
+    }
+
     public EnderecoFrete(EnderecoResponse enderecoResponse) {
         this.cep = enderecoResponse.getCep();
         this.rua = enderecoResponse.getLogradouro();
