@@ -1,4 +1,3 @@
-import com.br.frete.endereco.model.dto.EnderecoFrete;
 import com.br.frete.endereco.model.dto.EnderecoRequest;
 import com.br.frete.endereco.service.EnderecoService;
 import io.cucumber.java.pt.Dado;

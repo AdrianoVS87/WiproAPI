@@ -3,16 +3,10 @@ package com.br.frete.endereco.service;
 import com.br.frete.endereco.model.dto.EnderecoFrete;
 import com.br.frete.endereco.model.dto.EnderecoRequest;
 import com.br.frete.endereco.model.dto.EnderecoResponse;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Service
@@ -20,19 +14,8 @@ public class EnderecoService {
 
     public String executa(EnderecoRequest request) {
         try{
-            //**Consumindo API publica externa
-            URL url = new URL("https://viacep.com.br/ws/" + request.getCep() + "/json/");
-            URLConnection connection = url.openConnection();
-            InputStream is = connection.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
-            String cep = "";
-            StringBuilder jsonCep = new StringBuilder();
-            while ((cep = br.readLine()) != null) {
-                jsonCep.append(cep);
-            }
-
-            EnderecoResponse enderecoResponse = new Gson().fromJson(jsonCep.toString(), EnderecoResponse.class);
+            EnderecoResponse enderecoResponse = new RestTemplate().getForEntity("https://viacep.com.br/ws/" + request.getCep() + "/json/", EnderecoResponse.class).getBody();
 
             if (enderecoResponse != null && enderecoResponse.isErro()) {
                 return "CEP não encontrado, por favor repetir a consulta com dados válidos.";
@@ -65,7 +48,7 @@ public class EnderecoService {
 
             return enderecoFrete.toString();
 
-        } catch (IOException ex) {
+        } catch (HttpClientErrorException.BadRequest ex) {
             return "CEP inválido, por favor repetir a consulta com dados válidos.";
         }
     }

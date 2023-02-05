@@ -3,7 +3,6 @@ package com.br.frete.endereco;
 import com.br.frete.endereco.model.dto.EnderecoFrete;
 import com.br.frete.endereco.model.dto.EnderecoRequest;
 import com.br.frete.endereco.service.EnderecoService;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
