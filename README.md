@@ -2,8 +2,8 @@
 
 ## Teste Wipro
 
-Desafio técnico para vaga de Programador Java da Wipro.
-API RESTful para consulta de endereço e cálculo de frete.
+- Desafio técnico para vaga de Programador Java da Wipro.
+- API RESTful para consulta de endereço e cálculo de frete.
 
 ## Criado com
 
