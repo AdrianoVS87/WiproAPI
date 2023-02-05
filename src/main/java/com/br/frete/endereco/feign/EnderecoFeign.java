@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface EnderecoFeign {
 
     @GetMapping("{cep}/json")
-    EnderecoResponse buscaEnderecoCeo(@PathVariable("cep") String cep);
+    EnderecoResponse buscaEnderecoCep(@PathVariable("cep") String cep);
 
 }
