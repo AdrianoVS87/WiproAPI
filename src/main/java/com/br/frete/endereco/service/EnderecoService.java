@@ -6,8 +6,6 @@ import com.br.frete.endereco.model.dto.EnderecoResponse;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
