@@ -1,59 +1,72 @@
 package com.br.frete.endereco.service;
 
-import com.br.frete.endereco.feign.EnderecoFeign;
 import com.br.frete.endereco.model.dto.EnderecoFrete;
 import com.br.frete.endereco.model.dto.EnderecoRequest;
 import com.br.frete.endereco.model.dto.EnderecoResponse;
-import feign.FeignException;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 @RequiredArgsConstructor
 @Service
 public class EnderecoService {
 
-    private final EnderecoFeign enderecoFeign;
+    public String executa(EnderecoRequest request) throws IOException {
+        try{
+            //**Consumindo API publica externa
+            URL url = new URL("https://viacep.com.br/ws/" + request.getCep() + "/json/");
+            URLConnection connection = url.openConnection();
+            InputStream is = connection.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
-    public String executa(EnderecoRequest request){
-        try {
-            EnderecoResponse enderecoResponse = enderecoFeign.buscaEnderecoCep(request.getCep());
+            String cep = "";
+            StringBuilder jsonCep = new StringBuilder();
+            while ((cep = br.readLine()) != null) {
+                jsonCep.append(cep);
+            }
 
-            if(enderecoResponse.isErro()){
+            EnderecoResponse enderecoResponse = new Gson().fromJson(jsonCep.toString(), EnderecoResponse.class);
+
+            if (enderecoResponse != null && enderecoResponse.isErro()) {
                 return "CEP não encontrado, por favor repetir a consulta com dados válidos.";
             }
 
             EnderecoFrete enderecoFrete = new EnderecoFrete(enderecoResponse);
 
-            if (enderecoFrete.getEstado().equals("ES") || enderecoFrete.getEstado().equals("MG") || enderecoFrete.getEstado().equals("RJ") || enderecoFrete.getEstado().equals("SP")){
+            if (enderecoFrete.getEstado().equals("ES") || enderecoFrete.getEstado().equals("MG") || enderecoFrete.getEstado().equals("RJ") || enderecoFrete.getEstado().equals("SP")) {
                 enderecoFrete.setFrete(7.85);
             }
 
-            if (enderecoFrete.getEstado().equals("GO") || enderecoFrete.getEstado().equals("MT") || enderecoFrete.getEstado().equals("MS") || enderecoFrete.getEstado().equals("DF")){
+            else if (enderecoFrete.getEstado().equals("GO") || enderecoFrete.getEstado().equals("MT") || enderecoFrete.getEstado().equals("MS") || enderecoFrete.getEstado().equals("DF")) {
                 enderecoFrete.setFrete(12.50);
             }
 
-            if (enderecoFrete.getEstado().equals("MA") || enderecoFrete.getEstado().equals("PI") || enderecoFrete.getEstado().equals("CE") || enderecoFrete.getEstado().equals("RN")
-             || enderecoFrete.getEstado().equals("PB") || enderecoFrete.getEstado().equals("PE") || enderecoFrete.getEstado().equals("AL") || enderecoFrete.getEstado().equals("SE")
-             || enderecoFrete.getEstado().equals("BA")){
+            else if (enderecoFrete.getEstado().equals("MA") || enderecoFrete.getEstado().equals("PI") || enderecoFrete.getEstado().equals("CE") || enderecoFrete.getEstado().equals("RN")
+                    || enderecoFrete.getEstado().equals("PB") || enderecoFrete.getEstado().equals("PE") || enderecoFrete.getEstado().equals("AL") || enderecoFrete.getEstado().equals("SE")
+                    || enderecoFrete.getEstado().equals("BA")) {
                 enderecoFrete.setFrete(15.98);
             }
 
-            if (enderecoFrete.getEstado().equals("RS") || enderecoFrete.getEstado().equals("SC") || enderecoFrete.getEstado().equals("PR")){
+            else if (enderecoFrete.getEstado().equals("RS") || enderecoFrete.getEstado().equals("SC") || enderecoFrete.getEstado().equals("PR")) {
                 enderecoFrete.setFrete(17.30);
             }
 
-            if (enderecoFrete.getEstado().equals("AM") || enderecoFrete.getEstado().equals("PA") || enderecoFrete.getEstado().equals("AC") || enderecoFrete.getEstado().equals("RO")
-             || enderecoFrete.getEstado().equals("RR") || enderecoFrete.getEstado().equals("AP") || enderecoFrete.getEstado().equals("TO")){
+            else if (enderecoFrete.getEstado().equals("AM") || enderecoFrete.getEstado().equals("PA") || enderecoFrete.getEstado().equals("AC") || enderecoFrete.getEstado().equals("RO")
+                    || enderecoFrete.getEstado().equals("RR") || enderecoFrete.getEstado().equals("AP") || enderecoFrete.getEstado().equals("TO")) {
                 enderecoFrete.setFrete(20.83);
             }
 
             return enderecoFrete.toString();
 
-        } catch (FeignException.BadRequest e) {
-
-                return "CEP inválido, por favor repetir a consulta com dados válidos.";
-
+        } catch (Exception ex) {
+            return "CEP inválido, por favor repetir a consulta com dados válidos.";
         }
-
     }
 }
