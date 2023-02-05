@@ -9,7 +9,7 @@ API RESTful para consulta de endereço e cálculo de frete.
 
 - Linguagens: Java
 - Frameworks: Spring Boot
-- Tecnologias: Hibernate, JUnit, Cucumber, Lombok
+- Tecnologias: Hibernate, RestTemplate, JUnit, Cucumber, Lombok
 
 ## Como começar
 
