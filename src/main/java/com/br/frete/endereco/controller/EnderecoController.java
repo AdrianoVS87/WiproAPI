@@ -16,7 +16,7 @@ public class EnderecoController {
     private final EnderecoService enderecoService;
 
     @PostMapping("/consulta")
-    public ResponseEntity consultaCep(@RequestBody EnderecoRequest enderecoRequest) throws IOException {
+    public ResponseEntity consultaCep(@RequestBody EnderecoRequest enderecoRequest) {
         return ResponseEntity.ok(enderecoService.executa(enderecoRequest));
     }
 }

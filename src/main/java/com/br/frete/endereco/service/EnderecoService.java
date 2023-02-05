@@ -6,6 +6,8 @@ import com.br.frete.endereco.model.dto.EnderecoResponse;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.net.URLConnection;
 @Service
 public class EnderecoService {
 
-    public String executa(EnderecoRequest request) throws IOException {
+    public String executa(EnderecoRequest request) {
         try{
             //**Consumindo API publica externa
             URL url = new URL("https://viacep.com.br/ws/" + request.getCep() + "/json/");
@@ -65,7 +67,7 @@ public class EnderecoService {
 
             return enderecoFrete.toString();
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             return "CEP inválido, por favor repetir a consulta com dados válidos.";
         }
     }
